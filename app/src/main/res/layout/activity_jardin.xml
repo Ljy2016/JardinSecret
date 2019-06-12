@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/cl_ececec"
+    android:layout_height="match_parent"
+    tools:context=".page.JardinActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/cl_389b62"
+        app:navigationIcon="@mipmap/icon_title_back"
+        app:title="jardin secret"
+        app:titleTextColor="@color/white"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_project"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/toolbar"
+
+        />
+</RelativeLayout>
