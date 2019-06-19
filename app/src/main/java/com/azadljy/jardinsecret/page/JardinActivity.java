@@ -14,6 +14,9 @@ import com.azadljy.jardinsecret.R;
 import com.azadljy.jardinsecret.adapter.JardinAdapter;
 import com.azadljy.jardinsecret.base.BaseActivity;
 import com.azadljy.jardinsecret.lifecircle.SingleInstanceLifeObserver;
+import com.azadljy.jardinsecret.page.dialogpage.DialogActivity;
+import com.azadljy.jardinsecret.page.oceanmemory.OceanMemoryActivity;
+import com.azadljy.jardinsecret.page.treepage.TreeAdapterActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
@@ -56,7 +59,7 @@ public class JardinActivity extends BaseActivity {
                         startActivity(new Intent(JardinActivity.this, DialogActivity.class));
                         break;
                     case 2:
-//                        DialogManager.dismiss(mContext);
+                        startActivity(new Intent(JardinActivity.this, OceanMemoryActivity.class));
                         break;
                 }
             }
@@ -69,34 +72,36 @@ public class JardinActivity extends BaseActivity {
     private void initProjectInfo() {
         strings.add("TreeAdapter");
         strings.add("Dialog");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
-        strings.add("算法");
+        strings.add("OceanMemory");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+        strings.add("测试");
+
         for (int i = 0; i < strings.size(); i++) {
             JardinAdapter.JardinModel model = new JardinAdapter.JardinModel();
             model.setProjectName(strings.get(i));

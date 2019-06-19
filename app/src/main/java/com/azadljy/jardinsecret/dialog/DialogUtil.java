@@ -16,7 +16,7 @@ import com.azadljy.jardinsecret.R;
 
 public class DialogUtil {
 
-        public static void createSimpleDialog(final Context context) {
+    public static void createSimpleDialog(final Context context) {
         Dialog mDialog = DialogManager.getInstance().createDialog(context);
         View view = LayoutInflater.from(context).inflate(R.layout.item_simple, null);
         TextView textView = view.findViewById(R.id.tv_simple_name);
@@ -32,6 +32,7 @@ public class DialogUtil {
         mDialog.setTitle("dialog");
         mDialog.setCancelable(false);
     }
+
     public static Dialog createDialog(@NonNull final Context context) {
         return DialogManager.getInstance().createDialog(context);
     }

@@ -9,26 +9,29 @@
         android:roundIcon="@mipmap/ic_app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".page.oceanmemory.OceanMemoryActivity"></activity>
         <activity
             android:name=".page.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="启动页"
             android:theme="@style/FullscreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".page.JardinActivity">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name=".page.TreeAdapterActivity" />
-        <activity android:name=".page.DialogActivity" />
+        <activity android:name=".page.JardinActivity">
+
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+
+
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+        </activity>
+        <activity android:name=".page.treepage.TreeAdapterActivity" />
+        <activity android:name=".page.dialogpage.DialogActivity" />
     </application>
 
 </manifest>

@@ -1,6 +1,4 @@
-package com.azadljy.jardinsecret.page;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.azadljy.jardinsecret.page.treepage;
 
 import android.os.Bundle;
 

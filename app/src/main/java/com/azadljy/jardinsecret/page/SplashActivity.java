@@ -3,21 +3,23 @@ package com.azadljy.jardinsecret.page;
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.azadljy.jardinsecret.R;
+import com.azadljy.jardinsecret.base.BaseActivity;
+import com.azadljy.pleasantlibrary.widget.PrinterTextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -36,7 +38,8 @@ public class SplashActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private View mContentView;
+    private TextView tv_one;
+    private PrinterTextView tv_two;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -46,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
             // Note that some of these constants are new as of API 16 (Jelly Bean)
             // and API 19 (KitKat). It is safe to use them, as they are inlined
             // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+            tv_one.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -54,7 +57,8 @@ public class SplashActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
+
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -63,7 +67,7 @@ public class SplashActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-            mControlsView.setVisibility(View.VISIBLE);
+
         }
     };
     private boolean mVisible;
@@ -88,6 +92,54 @@ public class SplashActivity extends AppCompatActivity {
         }
     };
 
+    private static final String jardinSecret = "JardinSecret";
+
+
+    private final Runnable printText = new Runnable() {
+        @Override
+        public void run() {
+            if ("finish".equals(text)) {
+                tv_two.setTextString("Cecile Corbel")
+                        .startAnimation()
+                        .setTextAnimationListener(new PrinterTextView.TextAnimationListener() {
+                            @Override
+                            public void animationFinish() {
+                                startActivity(new Intent(SplashActivity.this, JardinActivity.class));
+                                finish();
+                            }
+                        });
+            } else {
+                tv_one.setText(text);
+            }
+        }
+    };
+
+    private String text;
+
+    private void sendPrintMsg() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 1; i <= jardinSecret.length() + 1; i++) {
+                    if (i <= jardinSecret.length()) {
+                        text = jardinSecret.substring(0, i);
+                    } else {
+                        text = "finish";
+                    }
+                    mHideHandler.post(printText);
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,28 +147,24 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        tv_one = findViewById(R.id.tv_one);
+        tv_two = findViewById(R.id.tv_two);
 
 
         // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
+        tv_one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-        findViewById(R.id.dummy_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SplashActivity.this, JardinActivity.class));
-            }
-        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sendPrintMsg();
     }
 
     @Override
@@ -143,7 +191,6 @@ public class SplashActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -154,7 +201,7 @@ public class SplashActivity extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        tv_one.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 

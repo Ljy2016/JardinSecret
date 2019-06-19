@@ -1,4 +1,4 @@
-package com.azadljy.jardinsecret.page;
+package com.azadljy.jardinsecret.page.dialogpage;
 
 import android.os.Bundle;
 import android.util.Log;
