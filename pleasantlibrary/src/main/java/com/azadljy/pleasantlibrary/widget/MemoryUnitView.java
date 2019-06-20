@@ -5,9 +5,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.customview.widget.ViewDragHelper;
 
 import com.azadljy.pleasantlibrary.utils.SizeUtil;
 
@@ -15,21 +18,28 @@ public class MemoryUnitView extends AppCompatTextView {
     public static final String TAG = "MemoryUnitView";
     private Context context;
 
+
+
+
     public MemoryUnitView(Context context) {
         super(context);
-        this.context = context;
+        init(context);
     }
 
     public MemoryUnitView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
+        init(context);
     }
 
     public MemoryUnitView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
+        init(context);
     }
 
+
+    private void init(Context context) {
+        this.context = context;
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -57,6 +67,19 @@ public class MemoryUnitView extends AppCompatTextView {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         Log.e(TAG, "dispatchTouchEvent: " + event.getAction());
+
+
         return super.dispatchTouchEvent(event);
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.e(TAG, "onTouchEvent: " + event.getAction());
+
+
+        return super.onTouchEvent(event);
+    }
+
+
+
 }

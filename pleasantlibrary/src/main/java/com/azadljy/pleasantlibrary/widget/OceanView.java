@@ -1,5 +1,7 @@
 package com.azadljy.pleasantlibrary.widget;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -9,6 +11,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
+
+import androidx.annotation.NonNull;
+import androidx.customview.widget.ViewDragHelper;
 
 import com.azadljy.pleasantlibrary.R;
 import com.azadljy.pleasantlibrary.utils.PositionUtil;
@@ -30,6 +36,9 @@ public class OceanView extends ViewGroup {
     private List<Point> childPointList = new ArrayList<>();
     private Point centerPoint;
     private Paint linePaint;
+    private ViewDragHelper viewDragHelper;
+    private DragCallback dragCallback;
+
 
     public OceanView(Context context) {
         super(context);
@@ -51,10 +60,15 @@ public class OceanView extends ViewGroup {
         linePaint = new Paint();
         linePaint.setColor(getResources().getColor(R.color.cl_333333));
         linePaint.setAntiAlias(true);
+
+        dragCallback = new DragCallback();
+        viewDragHelper = ViewDragHelper.create(this, dragCallback);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        Log.e(TAG, "onLayout: 调用");
+
         childPointList.clear();
         int count = getChildCount();
         int angel = 360 / (count - 1);
@@ -116,27 +130,56 @@ public class OceanView extends ViewGroup {
     @Override
     protected void onDraw(Canvas canvas) {
         //若没有设置背景，OnDraw不会调用
-        Log.e(TAG, "onDraw: " + childPointList.size());
+//        Log.e(TAG, "onDraw: " + childPointList.size());
 
         super.onDraw(canvas);
 
     }
 
-    Point movePoint;
-    Point lastPoint;
-
 
     //先拦截，再处理
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        Log.e(TAG, "onInterceptTouchEvent: " + ev.getAction());
-        return super.onInterceptTouchEvent(ev);
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+//        Log.e(TAG, "onInterceptTouchEvent: " + event.getAction());
+        return viewDragHelper.shouldInterceptTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.e(TAG, "onTouchEvent: " + event.getAction());
+//        Log.e(TAG, "onTouchEvent: " + event.getAction());
+//        dragView(event);
+//        viewDragHelper.processTouchEvent(event);
+        dragViewAnimator(event);
+        return true;
+    }
 
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        for (int i = 0; i < childPointList.size(); i++) {
+            Point childPoint = childPointList.get(i);
+            canvas.drawLine(centerPoint.x, centerPoint.y, childPoint.x, childPoint.y, linePaint);
+        }
+    }
+
+
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (viewDragHelper != null && viewDragHelper.continueSettling(true)) {
+            invalidate();
+        }
+    }
+
+    Point movePoint;
+    Point lastPoint;
+
+    /**
+     * View拖动第一种方式  scrollBy
+     *
+     * @param event 触摸事件
+     */
+    private void dragView(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 lastPoint = new Point((int) event.getX(), (int) event.getY());
@@ -154,19 +197,120 @@ public class OceanView extends ViewGroup {
                 break;
             case MotionEvent.ACTION_UP:
                 lastPoint = null;
-                movePoint = null;
                 break;
         }
-        return true;
     }
 
 
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        for (int i = 0; i < childPointList.size(); i++) {
-            Point childPoint = childPointList.get(i);
-            canvas.drawLine(centerPoint.x, centerPoint.y, childPoint.x, childPoint.y, linePaint);
+    private boolean isFirst = true;
+    private List<Point> pointList = new ArrayList<>();
+    private int flag = 0;
+
+    /**
+     * View拖动第二种方式   属性动画(效果比较差)
+     *
+     * @param event 触摸事件
+     */
+    private void dragViewAnimator(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                isFirst = true;
+                flag = 0;
+                pointList.clear();
+                lastPoint = new Point((int) event.getX(), (int) event.getY());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                movePoint = new Point((int) event.getX(), (int) event.getY());
+                int x, y;
+
+                x = lastPoint.x - movePoint.x;
+                y = lastPoint.y - movePoint.y;
+                if (Math.abs(x) > 50 || Math.abs(y) > 50) {
+                    if (isFirst) {
+                        startAnimator(-x, -y);
+                        isFirst = false;
+                    } else {
+                        pointList.add(new Point(-x, -y));
+                    }
+                    lastPoint = movePoint;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                lastPoint = null;
+
+                break;
         }
     }
+
+
+    private void startAnimator(int x, int y) {
+        animate().xBy(x).yBy(y).setDuration(50).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (flag < pointList.size()) {
+                    int x = pointList.get(flag).x;
+                    int y = pointList.get(flag).y;
+                    startAnimator(x, y);
+                    flag++;
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                Log.e(TAG, "onAnimationCancel: cancel");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).start();
+    }
+
+
+    class DragCallback extends ViewDragHelper.Callback {
+
+        int left = 0;
+        int top = 0;
+
+        @Override
+        public boolean tryCaptureView(@NonNull View child, int pointerId) {
+            return true;
+        }
+
+        @Override
+        public int clampViewPositionVertical(@NonNull View child, int top, int dy) {
+            return top;
+        }
+
+        @Override
+        public int clampViewPositionHorizontal(@NonNull View child, int left, int dx) {
+            return left;
+        }
+
+
+        @Override
+        public void onViewCaptured(@NonNull View capturedChild, int activePointerId) {
+            super.onViewCaptured(capturedChild, activePointerId);
+            left = capturedChild.getLeft();
+            top = capturedChild.getTop();
+
+        }
+
+        @Override
+        public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
+            super.onViewReleased(releasedChild, xvel, yvel);
+            viewDragHelper.settleCapturedViewAt(left, top);
+            invalidate();
+        }
+
+
+    }
+
+
 }
