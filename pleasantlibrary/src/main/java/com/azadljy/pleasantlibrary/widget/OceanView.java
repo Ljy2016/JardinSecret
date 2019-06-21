@@ -116,15 +116,16 @@ public class OceanView extends ViewGroup {
 //        /*
 //             获得此ViewGroup上级容器为其推荐的宽和高，以及计算模式
 //        */
-//        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-//        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-//        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-//        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 //
 //        //计算出所有的childView的宽和高
 //        measureChildren(widthMeasureSpec, heightMeasureSpec);
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        super.onMeasure(MeasureSpec.makeMeasureSpec(widthSize + 1000, widthMode), heightMeasureSpec);
     }
 
     @Override
@@ -147,9 +148,13 @@ public class OceanView extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        Log.e(TAG, "onTouchEvent: " + event.getAction());
-//        dragView(event);
+        dragView(event);
 //        viewDragHelper.processTouchEvent(event);
-        dragViewAnimator(event);
+//        dragViewAnimator(event);
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            performClick();
+        }
+
         return true;
     }
 
@@ -191,7 +196,7 @@ public class OceanView extends ViewGroup {
                 x = lastPoint.x - movePoint.x;
                 y = lastPoint.y - movePoint.y;
                 if (Math.abs(x) > 50 || Math.abs(y) > 50) {
-                    scrollBy(x, y);
+                    scrollBy(-x, -y);
                     lastPoint = movePoint;
                 }
                 break;
@@ -244,7 +249,7 @@ public class OceanView extends ViewGroup {
 
 
     private void startAnimator(int x, int y) {
-        animate().xBy(x).yBy(y).setDuration(50).setListener(new Animator.AnimatorListener() {
+        animate().xBy(x).yBy(y).setDuration(50).withLayer().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 

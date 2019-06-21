@@ -1,11 +1,14 @@
 package com.azadljy.jardinsecret.page.oceanmemory;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.azadljy.jardinsecret.R;
 import com.azadljy.jardinsecret.base.BaseActivity;
+import com.azadljy.pleasantlibrary.utils.AnimatorUtil;
 import com.azadljy.pleasantlibrary.widget.MemoryUnitView;
 import com.azadljy.pleasantlibrary.widget.OceanView;
 
@@ -30,7 +33,13 @@ public class OceanMemoryActivity extends BaseActivity {
             memoryUnitView.getLayoutParams().width = 200;
             memoryUnitView.setGravity(Gravity.CENTER);
         }
-
+        my_oceanView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "onClick: ");
+                AnimatorUtil.backGroundColorGradient(v, 3000, 0xffecf5ff, 0xff000079);
+            }
+        });
 
 //        my_ocean.setOnClickListener(new View.OnClickListener() {
 //            @Override
