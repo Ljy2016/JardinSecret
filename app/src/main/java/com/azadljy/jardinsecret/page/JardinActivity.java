@@ -16,6 +16,7 @@ import com.azadljy.jardinsecret.base.BaseActivity;
 import com.azadljy.jardinsecret.lifecircle.SingleInstanceLifeObserver;
 import com.azadljy.jardinsecret.page.dialogpage.DialogActivity;
 import com.azadljy.jardinsecret.page.oceanmemory.OceanMemoryActivity;
+import com.azadljy.jardinsecret.page.singlechoice.SingleChoiceActivity;
 import com.azadljy.jardinsecret.page.treepage.TreeAdapterActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -61,6 +62,9 @@ public class JardinActivity extends BaseActivity {
                     case 2:
                         startActivity(new Intent(JardinActivity.this, OceanMemoryActivity.class));
                         break;
+                    case 3:
+                        startActivity(new Intent(JardinActivity.this, SingleChoiceActivity.class));
+                        break;
                 }
             }
         });
@@ -73,7 +77,7 @@ public class JardinActivity extends BaseActivity {
         strings.add("TreeAdapter");
         strings.add("Dialog");
         strings.add("OceanMemory");
-        strings.add("测试");
+        strings.add("SingleChoice");
         strings.add("测试");
         strings.add("测试");
         strings.add("测试");

@@ -32,7 +32,7 @@ public class TreeAdapterActivity extends BaseActivity {
         getLifecycle().addObserver(SingleInstanceLifeObserver.getInstance());
     }
 
-    private void initData() {
+    public void initData() {
         nodes = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Node node = new Node();

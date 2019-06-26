@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_content"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content"
+    tools:context=".page.JardinActivity">
+
+    <com.azadljy.pleasantlibrary.widget.CheckBoxSample
+        android:id="@+id/cb_choice"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:color_background="@color/cl_fcd757"
+        app:color_border="@color/cl_4ba1dc"
+        app:size="32dp"
+        android:focusableInTouchMode="false"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:button="@null"
+         />
+
+    <TextView
+        android:id="@+id/tv_simple_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="15dp"
+        android:textColor="@color/cl_333333"
+        android:textSize="25sp" />
+
+</RelativeLayout>

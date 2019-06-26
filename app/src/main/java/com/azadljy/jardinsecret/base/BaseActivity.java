@@ -21,6 +21,13 @@ public class BaseActivity extends AppCompatActivity {
         mContext = this;
     }
 
+    public void  initData(){
+
+    }
+
+    public void  initView(){
+
+    }
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
