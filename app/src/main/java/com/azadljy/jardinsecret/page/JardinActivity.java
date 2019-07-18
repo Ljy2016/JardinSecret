@@ -15,6 +15,8 @@ import com.azadljy.jardinsecret.adapter.JardinAdapter;
 import com.azadljy.jardinsecret.base.BaseActivity;
 import com.azadljy.jardinsecret.lifecircle.SingleInstanceLifeObserver;
 import com.azadljy.jardinsecret.page.dialogpage.DialogActivity;
+import com.azadljy.jardinsecret.page.map.MapActivity;
+import com.azadljy.jardinsecret.page.meterreadingtest.MeterReadingTestActivity;
 import com.azadljy.jardinsecret.page.oceanmemory.OceanMemoryActivity;
 import com.azadljy.jardinsecret.page.singlechoice.SingleChoiceActivity;
 import com.azadljy.jardinsecret.page.treepage.TreeAdapterActivity;
@@ -53,7 +55,7 @@ public class JardinActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
                 switch (position) {
-                    case 0:
+                    case 5:
                         startActivity(new Intent(JardinActivity.this, TreeAdapterActivity.class));
                         break;
                     case 1:
@@ -65,6 +67,12 @@ public class JardinActivity extends BaseActivity {
                     case 3:
                         startActivity(new Intent(JardinActivity.this, SingleChoiceActivity.class));
                         break;
+                    case 4:
+                        startActivity(new Intent(JardinActivity.this, MapActivity.class));
+                        break;
+                    case 0:
+                        startActivity(new Intent(JardinActivity.this, MeterReadingTestActivity.class));
+                        break;
                 }
             }
         });
@@ -74,12 +82,12 @@ public class JardinActivity extends BaseActivity {
     private int COLOR_STARE = 0xffecf5ff;
 
     private void initProjectInfo() {
-        strings.add("TreeAdapter");
-        strings.add("Dialog");
-        strings.add("OceanMemory");
-        strings.add("SingleChoice");
-        strings.add("测试");
-        strings.add("测试");
+//        strings.add("TreeAdapter");
+//        strings.add("Dialog");
+//        strings.add("OceanMemory");
+//        strings.add("SingleChoice");
+//        strings.add("Map");
+        strings.add("MeterReadingTest");
         strings.add("测试");
         strings.add("测试");
         strings.add("测试");

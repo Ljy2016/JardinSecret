@@ -20,17 +20,18 @@ public class DialogUtil {
         Dialog mDialog = DialogManager.getInstance().createDialog(context);
         View view = LayoutInflater.from(context).inflate(R.layout.item_simple, null);
         TextView textView = view.findViewById(R.id.tv_simple_name);
-        textView.setText("test");
+        textView.setText("数据初始化中。。。");
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, JardinActivity.class));
-                ((Activity) context).finish();
+//                context.startActivity(new Intent(context, JardinActivity.class));
+//                ((Activity) context).finish();
             }
         });
         mDialog.setContentView(view);
-        mDialog.setTitle("dialog");
+        mDialog.setTitle("提示");
         mDialog.setCancelable(false);
+        mDialog.show();
     }
 
     public static Dialog createDialog(@NonNull final Context context) {
