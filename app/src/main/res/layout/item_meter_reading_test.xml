@@ -8,74 +8,96 @@
     tools:context=".page.meterreadingtest.MeterReadingTestActivity">
 
     <TextView
-        android:id="@+id/tv_meter_reading_name"
+        android:id="@+id/tv_meter_reading_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:text="仪表编号001"
         android:textColor="@color/cl_333333"
         android:textSize="20sp" />
 
 
     <TextView
-        android:id="@+id/tv_meter_reading_pressuretxt"
+        android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/et_meter_reading_pressure"
+        android:layout_below="@+id/tv_meter_reading_num"
         android:layout_marginLeft="10dp"
-        android:text="压力:" />
-
-    <EditText
-        android:id="@+id/et_meter_reading_pressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:inputType="numberDecimal"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_marginTop="150dp"
-        android:layout_toRightOf="@+id/tv_meter_reading_pressuretxt"
-        android:minWidth="100dp" />
-
-    <TextView
-        android:id="@+id/tv_meter_reading_fluxtxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/et_meter_reading_flux"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/et_meter_reading_flux"
-        android:text="流量:" />
-
-    <EditText
-        android:id="@+id/et_meter_reading_flux"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:inputType="numberDecimal"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_marginTop="150dp"
-        android:layout_marginRight="50dp"
-        android:minWidth="100dp" />
-
-    <Button
-        android:id="@+id/btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/et_meter_reading_pressure"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_marginTop="100dp"
-        android:text="保存" />
-
-    <TextView
-        android:id="@+id/tv_record"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_below="@+id/btn_save"
         android:layout_marginTop="50dp"
-        android:layout_marginRight="15dp" />
+        android:text="用户名:" />
+
+    <EditText
+        android:id="@+id/et_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_username"
+        android:layout_marginTop="150dp"
+        android:layout_toRightOf="@+id/tv_username"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:minWidth="100dp" />
+
+    <TextView
+        android:id="@+id/tv_user_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_username"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
+        android:text="用户地址:" />
+
+    <EditText
+        android:id="@+id/et_user_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_user_address"
+        android:layout_marginTop="150dp"
+        android:layout_toRightOf="@+id/tv_user_address"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:minWidth="100dp" />
+
+    <TextView
+        android:id="@+id/tv_user_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_address"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
+        android:text="用户类型:" />
+
+    <EditText
+        android:id="@+id/et_user_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_user_type"
+        android:layout_marginTop="150dp"
+        android:layout_toRightOf="@+id/tv_user_type"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:minWidth="100dp" />
+
+    <TextView
+        android:id="@+id/tv_user_meter_reading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_type"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
+        android:text="水表读数:" />
+
+    <EditText
+        android:id="@+id/et_user_meter_reading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_user_meter_reading"
+        android:layout_marginTop="150dp"
+        android:layout_toRightOf="@+id/tv_user_meter_reading"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:inputType="numberDecimal"
+        android:minWidth="100dp" />
+
 
 </RelativeLayout>

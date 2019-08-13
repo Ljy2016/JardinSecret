@@ -12,7 +12,9 @@ import androidx.annotation.NonNull;
 
 import com.qw.soul.permission.SoulPermission;
 import com.qw.soul.permission.bean.Permission;
+import com.qw.soul.permission.bean.Permissions;
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener;
+import com.qw.soul.permission.callbcak.CheckRequestPermissionsListener;
 import com.qw.soul.permission.callbcak.GoAppDetailCallBack;
 
 
@@ -74,6 +76,20 @@ public class PermissionUtil {
         });
     }
 
+    public static void callReadAndWrite(final Context context, final PermissionListener permissionListener) {
+        SoulPermission.getInstance().checkAndRequestPermissions(Permissions.build(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE), new CheckRequestPermissionsListener() {
+            @Override
+            public void onAllPermissionOk(Permission[] allPermissions) {
+                permissionListener.onSuccess();
+            }
+
+            @Override
+            public void onPermissionDenied(Permission[] refusedPermissions) {
+
+            }
+        });
+    }
+
 
     public static boolean checkPermission(@NonNull String permission) {
         Permission checkResult = SoulPermission.getInstance().checkSinglePermission(permission);
@@ -81,7 +97,7 @@ public class PermissionUtil {
     }
 
 
-    public static void showAlertDialog(final Context context, final PermissionListener permissionListener,String message,DialogInterface.OnClickListener onClickListener) {
+    public static void showAlertDialog(final Context context, final PermissionListener permissionListener, String message, DialogInterface.OnClickListener onClickListener) {
         new AlertDialog.Builder(context)
                 .setTitle("提示")
                 .setMessage(message)

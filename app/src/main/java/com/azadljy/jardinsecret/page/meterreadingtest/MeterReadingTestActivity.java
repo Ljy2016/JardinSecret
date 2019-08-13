@@ -6,19 +6,31 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
+import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.azadljy.jardinsecret.App;
 import com.azadljy.jardinsecret.R;
 import com.azadljy.jardinsecret.adapter.MeterReadingAdapter;
 import com.azadljy.jardinsecret.base.BaseActivity;
 import com.azadljy.jardinsecret.dialog.DialogUtil;
+import com.azadljy.pleasantlibrary.utils.FileUtil;
+import com.azadljy.pleasantlibrary.utils.PermissionUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.qw.soul.permission.SoulPermission;
+import com.qw.soul.permission.callbcak.GoAppDetailCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,18 +40,18 @@ import static com.azadljy.jardinsecret.page.meterreadingtest.FocusLayoutManager.
 public class MeterReadingTestActivity extends BaseActivity {
 
     private MyRecyclerView recyclerView;
-    private PagingScrollHelper scrollHelper;
-    private SwipeCardLayoutManager swipeCardLayoutManager;
-//    PagerSnapHelper
+
 
     private MyLayoutManager myLayoutManager;
-    private LinearLayoutManager linearLayoutManager;
-    private OverFlyingLayoutManager overFlyingLayoutManager;
-    FocusLayoutManager focusLayoutManager;
+
     private MeterReadingAdapter adapter;
-    private List<MeterReadingAdapter.MeterReadingModel> modelList;
+    private List<UserBookInfo> userBookInfos = new ArrayList<>();
     private Button btn_save;
+    private DBManager dbManager;
+    private SQLiteDatabase sqLiteDatabase;
     int currentPosition;
+private ViewPager viewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,135 +63,95 @@ public class MeterReadingTestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 currentPosition = myLayoutManager.getCurrentPosition();
-                EditText editTextPressure = (EditText) adapter.getViewByPosition(currentPosition, R.id.et_meter_reading_pressure);
-                EditText editTextFlux = (EditText) adapter.getViewByPosition(currentPosition, R.id.et_meter_reading_flux);
-                String pressure = editTextPressure.getText().toString();
-                String flux = editTextFlux.getText().toString();
-                String record = modelList.get(currentPosition).getRecord();
-                record = "保存读数:压力: " + pressure + ",流量: " + flux + "\n" + record;
-                modelList.get(currentPosition).setPressure(pressure);
-                modelList.get(currentPosition).setFlux(flux);
-                modelList.get(currentPosition).setRecord(record);
-
+                EditText editName = (EditText) adapter.getViewByPosition(currentPosition, R.id.et_username);
+                EditText editAddress = (EditText) adapter.getViewByPosition(currentPosition, R.id.et_user_address);
+                EditText editType = (EditText) adapter.getViewByPosition(currentPosition, R.id.et_user_type);
+                EditText editNumber = (EditText) adapter.getViewByPosition(currentPosition, R.id.et_user_meter_reading);
+                String name = editName.getText().toString();
+                String address = editAddress.getText().toString();
+                String type = editType.getText().toString();
+                int number = Integer.parseInt(editNumber.getText().toString());
+                userBookInfos.get(currentPosition).setCustomername(name);
+                userBookInfos.get(currentPosition).setAccounttype(type);
+                userBookInfos.get(currentPosition).setCustomeraddress(address);
+                userBookInfos.get(currentPosition).setLastmeterdata(number);
                 adapter.notifyItemChanged(currentPosition);
+                dbManager.updata(sqLiteDatabase, userBookInfos.get(currentPosition));
             }
         });
-        modelList = new ArrayList<>();
-        adapter = new MeterReadingAdapter(R.layout.item_meter_reading_test, modelList);
-        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.btn_save:
-                        EditText editTextPressure = (EditText) adapter.getViewByPosition(position, R.id.et_meter_reading_pressure);
-                        EditText editTextFlux = (EditText) adapter.getViewByPosition(position, R.id.et_meter_reading_flux);
-                        String pressure = editTextPressure.getText().toString();
-                        String flux = editTextFlux.getText().toString();
-                        String record = modelList.get(position).getRecord();
-                        record = "保存读数:压力: " + pressure + ",流量: " + flux + "\n" + record;
-                        modelList.get(position).setPressure(pressure);
-                        modelList.get(position).setFlux(flux);
-                        modelList.get(position).setRecord(record);
+        dbManager = new DBManager(mContext);
 
-                        adapter.notifyItemChanged(position);
+        adapter = new MeterReadingAdapter(R.layout.item_meter_reading_test, userBookInfos);
 
-                        Log.e(TAG, "onItemChildClick: " + position);
-                        break;
-                }
-            }
-        });
         adapter.bindToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
-        initMeterReadingData();
-//        recyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {
-//            @Override
-//            public boolean onFling(int velocityX, int velocityY) {
-//                velocityX=1080;
-//                return false;
-//            }
-//        });
-//        setRecyclerViewUi();
-        setRecyclerViewUI1();
-//        setRecyclerViewUI2();
-//        setRecyclerViewUiOverFlying();
-//        scrollHelper.setUpRecycleView(recyclerView);
 
+        initMeterReadingData();
+
+
+        setRecyclerViewUi();
+
+viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+});
     }
 
 
     public void setRecyclerViewUi() {
-        linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        SnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-//                outRect.right = -2000;
-            }
-        });
-
-    }
-
-    public void setRecyclerViewUiOverFlying() {
-        overFlyingLayoutManager = new OverFlyingLayoutManager(RecyclerView.HORIZONTAL, false);
-        recyclerView.setLayoutManager(overFlyingLayoutManager);
-        SnapHelper snapHelper = new PagerSnapHelper();
-//        snapHelper.attachToRecyclerView(recyclerView);
-    }
-
-    public void setRecyclerViewUI1() {
         myLayoutManager = new MyLayoutManager();
+
         recyclerView.setLayoutManager(myLayoutManager);
-
-//        SnapHelper snapHelper = new PagerSnapHelper();
-//        snapHelper.attachToRecyclerView(recyclerView);
-    }
-
-
-    public void setRecyclerViewUI2() {
-        focusLayoutManager =
-                new FocusLayoutManager.Builder()
-                        .focusOrientation(FocusLayoutManager.FOCUS_LEFT)
-                        .isAutoSelect(true)
-                        .maxLayerCount(3)
-                        .setOnFocusChangeListener(new FocusLayoutManager.OnFocusChangeListener() {
-                            @Override
-                            public void onFocusChanged(int focusdPosition, int lastFocusdPosition) {
-
-                            }
-                        })
-                        .build();
-        recyclerView.setLayoutManager(focusLayoutManager);
     }
 
 
     private void initMeterReadingData() {
+        PermissionUtil.callReadAndWrite(this, new PermissionUtil.PermissionListener() {
+            @Override
+            public void onSuccess() {
+                sqLiteDatabase = dbManager.getDatabase();
+                userBookInfos.addAll(dbManager.query(sqLiteDatabase, null, null, null));
+                adapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onFailure() {
+
+            }
+        });
 //        DialogUtil.createSimpleDialog(mContext);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 5000; i++) {
-                    MeterReadingAdapter.MeterReadingModel model = new MeterReadingAdapter.MeterReadingModel("仪表编号00" + i);
-                    modelList.add(model);
-                }
-                Log.e(TAG, "run: over");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        DialogUtil.dismiss(mContext);
-                        adapter.notifyDataSetChanged();
-//                        moveToPosition(linearLayoutManager,500000);
-                        Log.e(TAG, "run: over");
-                    }
-                });
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                for (int i = 0; i < 5000; i++) {
+//                    MeterReadingAdapter.MeterReadingModel model = new MeterReadingAdapter.MeterReadingModel("仪表编号00" + i);
+//                    modelList.add(model);
+//                }
+//                Log.e(TAG, "run: over");
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        DialogUtil.dismiss(mContext);
+//                        adapter.notifyDataSetChanged();
+////                        moveToPosition(linearLayoutManager,500000);
+//                        Log.e(TAG, "run: over");
+//                    }
+//                });
+//            }
+//        }).start();
 
     }
 

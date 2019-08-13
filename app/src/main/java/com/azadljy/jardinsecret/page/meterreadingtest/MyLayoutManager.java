@@ -22,6 +22,8 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
     private long autoSelectMinDuration = 100;
     private long autoSelectMaxDuration = 300;
 
+    private OnPageChangeListener onPageChangeListener;
+
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -31,7 +33,6 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-//        super.onLayoutChildren(recycler, state);
         if (state.getItemCount() == 0) {
             //没有Item可布局，就回收全部临时缓存 (参考自带的LinearLayoutManager)
             //这里的没有Item，是指Adapter里面的数据集，
@@ -62,12 +63,6 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
     int onceCompleteScrollLength = -1;
     int mHorizontalOffset = 0;
     int totalLength;
-
-    private void initLayout() {
-        for (int i = mLastVisiPos; i >= mFirstVisiPos; i--) {
-
-        }
-    }
 
 
     private int layoutChildren(RecyclerView.Recycler recycler, int dx) {
@@ -299,7 +294,11 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
 
         if (remainder >= onceCompleteScrollLength / 2.0f) { //超过一半，应当选中下一项
             if (currentPosition + 1 <= getItemCount() - 1) {
-                return currentPosition + 1;
+                if (onPageChangeListener.onPageScrollStateChanged()) {
+                    return currentPosition + 1;
+                } else {
+                    return currentPosition;
+                }
             }
         }
 
@@ -371,13 +370,22 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void scrollToPosition(int position) {
-        Log.e(TAG, "scrollToPosition: "+position);
-        Log.e(TAG, "scrollToPosition: "+onceCompleteScrollLength);
+        Log.e(TAG, "scrollToPosition: " + position);
+        Log.e(TAG, "scrollToPosition: " + onceCompleteScrollLength);
         mHorizontalOffset = position * onceCompleteScrollLength;
         requestLayout();
     }
 
     public int getCurrentPosition() {
         return currentPosition;
+    }
+
+
+    public interface OnPageChangeListener {
+        boolean onPageScrollStateChanged();
+    }
+
+    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+        this.onPageChangeListener = onPageChangeListener;
     }
 }

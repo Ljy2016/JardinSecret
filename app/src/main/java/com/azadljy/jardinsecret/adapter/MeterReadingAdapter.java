@@ -7,15 +7,16 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.azadljy.jardinsecret.R;
+import com.azadljy.jardinsecret.page.meterreadingtest.UserBookInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
-public class MeterReadingAdapter extends BaseQuickAdapter<MeterReadingAdapter.MeterReadingModel, BaseViewHolder> {
+public class MeterReadingAdapter extends BaseQuickAdapter<UserBookInfo, BaseViewHolder> {
 
 
-    public MeterReadingAdapter(int layoutResId, @Nullable List<MeterReadingModel> data) {
+    public MeterReadingAdapter(int layoutResId, @Nullable List<UserBookInfo> data) {
         super(layoutResId, data);
     }
 
@@ -26,11 +27,12 @@ public class MeterReadingAdapter extends BaseQuickAdapter<MeterReadingAdapter.Me
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MeterReadingModel item) {
-        helper.setText(R.id.tv_meter_reading_name, item.getProjectName());
-        helper.setText(R.id.et_meter_reading_pressure, item.getPressure());
-        helper.setText(R.id.et_meter_reading_flux, item.getFlux());
-        helper.setText(R.id.tv_record, item.getRecord());
+    protected void convert(BaseViewHolder helper, UserBookInfo item) {
+        helper.setText(R.id.tv_meter_reading_num, "用户id：" + item.getId());
+        helper.setText(R.id.et_username, item.getCustomername());
+        helper.setText(R.id.et_user_address, item.getCustomeraddress());
+        helper.setText(R.id.et_user_type, item.getAccounttype());
+        helper.setText(R.id.et_user_meter_reading, item.getLastmeterdata() + "");
         int color = 0;
         switch (helper.getLayoutPosition() % 4) {
             case 0:
@@ -47,55 +49,8 @@ public class MeterReadingAdapter extends BaseQuickAdapter<MeterReadingAdapter.Me
                 break;
         }
         helper.setBackgroundColor(R.id.item_constraintlayout, color);
-        helper.addOnClickListener(R.id.btn_save);
 
     }
 
-    public static class MeterReadingModel {
-        private String projectName;
-        private String pressure;
-        private String flux;
-        private String record = "";
 
-        public MeterReadingModel(String projectName) {
-            this.projectName = projectName;
-
-        }
-
-        public MeterReadingModel() {
-        }
-
-        public String getPressure() {
-            return pressure;
-        }
-
-        public void setPressure(String pressure) {
-            this.pressure = pressure;
-        }
-
-        public String getFlux() {
-            return flux;
-        }
-
-        public void setFlux(String flux) {
-            this.flux = flux;
-        }
-
-        public String getRecord() {
-            return record;
-        }
-
-        public void setRecord(String record) {
-            this.record = record;
-        }
-
-        public String getProjectName() {
-            return projectName;
-        }
-
-        public void setProjectName(String projectName) {
-            this.projectName = projectName;
-        }
-
-    }
 }
